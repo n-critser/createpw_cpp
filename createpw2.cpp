@@ -28,7 +28,7 @@ protected:
             return key;
         }
 public:
-    Word(int k){ std::cout<< "\nkey="<< k <<std::endl; key = k;}
+    Word(int k){ key = k;}
     int get_key(){ return key;}
     std::string get_word(){ return value;}
     int set_value(std::string s){ value =s; return 0;} 
@@ -36,7 +36,7 @@ public:
 
 std::map<int,std::string> packdict(std::map<int,std::string> & map, std::string filename)
 {
-    std::cout<< " Pack the map with int , word pairs from file: "<<filename<<std::endl;
+    // std::cout<< " Pack the map with int , word pairs from file: "<<filename<<std::endl;
     std::ifstream file(filename);
     std::string line;
     if (file.is_open())
@@ -44,7 +44,7 @@ std::map<int,std::string> packdict(std::map<int,std::string> & map, std::string 
         while (getline(file,line))
         {
             
-            std::cout<< line<< std::endl;
+            // std::cout<< line<< std::endl;
             // https://stackoverflow.com/questions/236129/how-do-i-iterate-over-the-words-of-a-string
             std::regex reg("[\\s]+");
             std::sregex_token_iterator it( line.begin(), line.end(), reg, -1 );
@@ -69,7 +69,7 @@ std::map<int,std::string> packdict(std::map<int,std::string> & map, std::string 
                     ++it;
                     if (!it->str().empty() )
                     {
-                        std::cout <<"dict entry {"<<num<< "," <<   it->str() << "}" <<  std::endl ;
+                        // std::cout <<"dict entry {"<<num<< "," <<   it->str() << "}" <<  std::endl ;
                         map.emplace(num,it->str());
                     }
                 }
@@ -90,13 +90,13 @@ int get_word(std::map<int, std::string> map , Word * word)
     {
         std::map<int,std::string>::iterator dict_it;
         int key =  word->get_key();
-        std::cout << "word key="<< word->get_key()<<std::endl;
+        // std::cout << "word key="<< word->get_key()<<std::endl;
         dict_it=map.find(key);
         // std::cout << map.find(key)->second << std::endl;
         // std::cout << "dict_it != map.end()" << (dict_it != map.end() ) << std::endl;
         if ( dict_it != map.end()   )
         {
-            std::cout << map.find(key)->second << std::endl;
+            // std::cout << map.find(key)->second << std::endl;
             word->set_value(dict_it->second);
             success =0; 
         }
@@ -122,12 +122,12 @@ std::vector<Word> parse_input_to_wordlist(std::string input)
             if (!it->str().empty() )
             {
                 std::size_t pos{};
-                std::cout <<  it->str() ;
+                // std::cout <<  it->str() ;
                 int num =0;
                 try
                 {
                     num = std::stoi(it->str(),&pos);
-                    std::cout << "Number of inputs : "<<num<< std::endl;
+                    std::cout << "\nNumber of inputs : "<<num<< std::endl;
                 }
                 catch(std::invalid_argument const &ex)
                 {
@@ -137,7 +137,6 @@ std::vector<Word> parse_input_to_wordlist(std::string input)
                 {
                     if (!it->str().empty() )
                     {
-                        std::cout <<  it->str() ;
                         try
                         {
                             num = std::stoi(it->str(),&pos);
@@ -233,10 +232,21 @@ int main(int argc, char**argv)
          **/
         wordlist= parse_input_to_wordlist(input);
     }
+    std::string pw_str="";
     for (int i = 0; i < wordlist.size();i++)
     {
         get_word(dictmap, &wordlist[i]);
-        std::cout << wordlist[i].get_word(); 
+        std::string w = wordlist[i].get_word();
+        // TO UPPER 1/2 the words
+        if ( i % 2 ==0 )
+        {
+            std::for_each(w.begin(), w.end(), [](char& c)
+                                                  { // modify in-place
+                                                      c = std::toupper(static_cast<unsigned char>(c));
+                                                  });
+        }
+        //std::cout << wordlist[i].get_word();
+        pw_str+=w;
     }
-    std::cout<< std::endl;
+    std::cout<<pw_str<< std::endl;
 }
