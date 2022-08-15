@@ -214,7 +214,7 @@ int main(int argc, char**argv)
     {
         std::cout << "Enter the number of words in your password" <<std::endl ;
         std::cin >> wc;
-        std::cout << " you entered " << wc << " is that right";
+        std::cout << " you entered " << wc << " is that right"<< std::endl;;
         int entry;
         for (int i =0; i < wc ; i++)
         {
@@ -235,8 +235,19 @@ int main(int argc, char**argv)
     std::string pw_str="";
     for (int i = 0; i < wordlist.size();i++)
     {
+        std::size_t pos{};
         get_word(dictmap, &wordlist[i]);
         std::string w = wordlist[i].get_word();
+        int n = wordlist[i].get_key();
+        std::string n_str=std::to_string(n);
+        std::string int_str="";
+        int_str+=n_str[0];
+        int_str+=n_str[1];
+        std::string n0_str{n_str[0]};
+        int n0{std::stoi(n0_str, &pos,10)};
+        // ascii value 32 ( space) + value of first integer
+        // gets you a symbol between {33,38} inclusive [ !"#$%& ]
+        std::string symb_str{32 + n0};
         // TO UPPER 1/2 the words
         if ( i % 2 ==0 )
         {
@@ -244,8 +255,11 @@ int main(int argc, char**argv)
                                                   { // modify in-place
                                                       c = std::toupper(static_cast<unsigned char>(c));
                                                   });
+
+            w+=int_str;
         }
         //std::cout << wordlist[i].get_word();
+        w+=symb_str;
         pw_str+=w;
     }
     std::cout<<pw_str<< std::endl;
