@@ -10,7 +10,7 @@ all:
 
 
 clean:
-	rm $(SRC)
+	rm -f $(SRC)
 
 test:  clean all
 	./$(SRC) -d wordfiles/test_seq1.txt -i test/test_2word.wl
